@@ -7,7 +7,7 @@ let s:keepcpo = &cpo
 set cpo&vim
 
 let s:mochaCmd = 'mocha'
-let s:mochaOptions = '-R Min'
+let s:mochaOptions = '--bail'
 
 function! s:initVar(var, value)
   if ! exists(a:var)
@@ -45,8 +45,9 @@ function! MochaRun(fName)
     let cmd = g:mocha_run_path . "/" . cmd
   endif
 
-  let output = split(system(cmd), '\v\n')
-  call s:formatOutput(output)
+  call s:switchWindow()
+  silent execute ":%!" . cmd
+  silent normal! G
 endfunction
 
 function! CmdRun(...)
@@ -88,24 +89,6 @@ function! s:switchWindow()
     endif
   endif
 endfunction
-
-function! s:formatOutput(lines)
-  let status = ""
-  for line in a:lines
-    let st = matchstr(line, '\d\+\s\(passing\|failing\|pending\).*')
-    if !empty(st)
-      let status = status . "\t" . st
-    elseif !empty(line) && !empty(status)
-      call append(line('$'), line)
-    endif
-  endfor
-  if empty(status)
-    call append("0", a:lines)
-  else
-    call append("0", status)
-  endif
-endfunction
-
 
 let &cpo= s:keepcpo
 unlet s:keepcpo
