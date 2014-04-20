@@ -7,7 +7,7 @@ let s:keepcpo = &cpo
 set cpo&vim
 
 let s:mochaCmd = 'mocha'
-let s:mochaOptions = '--bail'
+let s:mochaOptions = '-C --bail'
 
 function! s:initVar(var, value)
   if ! exists(a:var)
